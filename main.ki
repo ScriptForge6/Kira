@@ -1,0 +1,97 @@
+import std.io;
+import std.string;
+import std.format;
+import something from "detail/something"; //如果添加到识别目录/同级就会自动识别
+
+fn doSomething() -> void { //可省去 -> void，如果没有->，默认返回void，如果与内部return类型不一致会报错
+    let a : i8 = 1; //常量 //强制绑定类型
+    const b : i8 = 2; //编译期常量
+    let mut c : i8 = 3; //变量
+    let a : i8= 2; //重新定义a
+    {
+        let a : i8 = 3; //重新定义a
+        //let b : i8 = 4; //对常量重定义会报错
+        let c : i8 = 5; //重新定义c
+        std::println("a: {}, b: {}, c: {}", a, b, c);
+    }
+}
+
+tem <type T,type... Args>
+fn format(/*可以加mut*/&value: T, args: Args) -> std::string { //&value，引用传递，自动引用计数
+    return std::format(value.*, args); //.* 解引用
+    //你也可以
+    //import std.template;
+    //std::unpack(args); //返回一个类似C++的std::tuple<Args...>类型的对象
+}
+
+class A { //类似C++，但默认为const函数，当然，也支持模板类，访问内部成员需要使用this.*，默认子类可以访问基类的私有内容
+    pub fn A();
+    pub fn a() -> i32 mut noexcept;
+    fn b() -> i32 mut noexcept; //私有函数
+    pro fn c() -> i32 mut noexcept; //私有函数，但子类无法访问
+    static fn d() -> i32; //静态函数
+    pub let mut a : i8 = 0;
+}
+
+class B : pub A@ {//默认私有（pri），还可以pro/pri，@表示将返回值为A的替换成B
+
+}
+
+fn main() -> i32 {
+    doSomething();
+    let a : i8 = 1;
+    let b : i8 = 2; //也可以写成let /*mut */a : i8 = 1, /*mut */b : i8 = 2, /*mut */c : i8 = 3;
+    let c : i8 = 3;
+    std::println("a: {}, b: {}, c: {}", a, b, c);
+    std::println("format: {}", format("a: {}, b: {}, c: {}", a, b, c));
+
+    if let i : i32 = 0; a == 1 {
+        std::println("a == 1");
+    } else {if a == 2 { //或者elif a == 2 {
+        std::println("a == 2");
+    }} else {
+        std::println("a != 1 && a != 2");
+    }
+
+    let d : char = //char类型，默认为UTF-32编码 //有char8，char16，char32（等价于char，可以直接转换）类型
+        if let i : i32 = 0; a == 1 -> char? { //if 强制大括号，以明确isNull的归属问题
+            //你也可以在这里执行一些操作
+            retVal '1'; //retVal，关键字，用于返回一个代码块的值（必须与大括号代码块连用）
+        } else {if a == 2 -> char? { 
+            retVal '2'; //retVal，关键字，用于返回一个代码块的值（必须与大括号代码块连用）
+        }}.isNull { //isNull，所有?类型都有isNull代码块，如果值为null，则执行isNull代码块
+            std::println("d is null");
+            retVal '!'; //retVal，关键字，用于返回一个代码块的值（必须与大括号代码块连用）
+        }.unwrap() //unwrap，所有?类型都有unwrap函数，如果值为null，则抛出异常
+            catch(err) { //catch，关键字，用于捕获一个上一个函数（或一个大括号代码块，或一个if表达式）返回的异常（必须与上一个函数（或一个大括号代码块，或一个if表达式）连用）
+                panic(err);
+            };
+    while let i : i32 = 0; a == 1 -> i32  {
+        doSomething();
+        break;
+        continue;
+        retVal i; //相当于break; + 返回值
+    }
+
+    doWhile let i : i32 = 0; a == 1 {
+
+    }
+
+    for let i : i32 = 0; i <= 2; i++ { //初始化指令只能为变量初始化，第二条指令必须返回一个bool值，第三条指令是一个迭代指令
+
+    }
+
+    //for循环执行顺序：
+    //初始化i=0
+    //比较i是否<=2
+    //执行内容
+    //i++
+    //比较i是否<=2
+    //执行内容
+    //i++
+    //比较i是否<=2
+    //退出
+
+
+
+}
