@@ -33,7 +33,7 @@ class A { //类似C++，但默认为const函数，当然，也支持模板类，
     pub let mut a : i8 = 0;
 }
 
-class B : pub A@ {//默认私有（pri），还可以pro/pri，@表示将返回值为A的替换成B
+class B : pub A@ {//默认私有（pri），还可以pro/pri，@表示将A类中所有使用A的全部的替换成B
 
 }
 
