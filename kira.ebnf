@@ -128,7 +128,7 @@ module name = letter, { letter | decimal digit | '.' | '_' };
 (* --- expressions (TODO) --- *)
 
 expression = if expression | ? TODO: other expressions ?;
-if expression = [ whitespace ], if keyword, whitespace, ;    (* TODO: condition and branches *)
+if expression = [ whitespace ], if keyword, whitespace;    (* TODO: condition and branches *)
 
 (* --- declarations --- *)
 
