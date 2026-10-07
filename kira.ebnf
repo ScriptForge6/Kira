@@ -90,7 +90,7 @@ string literal = escaped string literal | raw string literal;
 semicolon = ';';
 statement end = [ whitespace ], semicolon;
 
-(* --- keywords --- *)
+(* --- keywords (TODO) --- *)
 
 let keyword = 'let';          (* immutable variable *)
 mut keyword = 'mut';          (* used as: let mut *)
@@ -98,6 +98,12 @@ const keyword = 'const';      (* compile-time constant *)
 import keyword = 'import';
 from keyword = 'from';
 if keyword = 'if';
+else keyword = 'else';
+elif keyword = 'elif';
+function keyword = 'fn';
+class keyword = 'class';
+break keyword = 'break';
+continue keyword = 'continue';
 
 (* --- types --- *)
 
@@ -112,7 +118,13 @@ keyword =
     const keyword |
     import keyword |
     from keyword |
-    if keyword;
+    if keyword |
+    else keyword |
+    elif keyword |
+    function keyword |
+    class keyword |
+    break keyword |
+    continue keyword;
 
 (* --- names --- *)
 
@@ -125,7 +137,7 @@ module name = letter, { letter | decimal digit | '.' | '_' };
 (* --- expressions (TODO) --- *)
 
 expression = if expression | ? TODO: other expressions ?;
-if expression = [ whitespace ], if keyword;    (* TODO: condition and branches *)
+if expression = [ whitespace ], if keyword, whitespace, ;    (* TODO: condition and branches *)
 
 (* --- declarations --- *)
 
