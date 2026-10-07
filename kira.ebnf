@@ -1,6 +1,10 @@
 (* ======================================================================
    Kira grammar (using ISO 14977 EBNF)
-   Sections: 1 characters, 2 literals, 3 tokens, 4 syntax, 5 comment
+   Sections: 1 characters,
+             2 literals,
+             3 tokens,
+             4 syntax,
+             5 comment
    ====================================================================== *)
 
 
