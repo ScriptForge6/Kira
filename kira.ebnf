@@ -65,16 +65,7 @@ escaped string literal = double quoted string | single quoted string;
 (* --- raw strings: R"delim( ... )delim" --- *)
 
 raw delimiter character = printable character - ( '(' | ')' );
-(* 0 to 16 delimiter characters *)
-raw delimiter =
-    [ raw delimiter character ], [ raw delimiter character ],
-    [ raw delimiter character ], [ raw delimiter character ],
-    [ raw delimiter character ], [ raw delimiter character ],
-    [ raw delimiter character ], [ raw delimiter character ],
-    [ raw delimiter character ], [ raw delimiter character ],
-    [ raw delimiter character ], [ raw delimiter character ],
-    [ raw delimiter character ], [ raw delimiter character ],
-    [ raw delimiter character ], [ raw delimiter character ];
+raw delimiter = 16 * [ raw delimiter character ];
 
 raw string literal =
     'R"', raw delimiter, '(',
