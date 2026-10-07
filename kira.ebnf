@@ -1,0 +1,193 @@
+(* ======================================================================
+   Kira grammar (using ISO 14977 EBNF)
+   Sections: 1 characters, 2 literals, 3 tokens, 4 syntax, 5 comment
+   ====================================================================== *)
+
+
+(* ---------------------------- 1. Characters ---------------------------- *)
+
+upper letter = 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z';
+lower letter = 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z';
+letter = upper letter | lower letter;
+
+binary digit = '0' | '1';
+decimal digit = binary digit | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9';
+upper hex digit = decimal digit | 'A' | 'B' | 'C' | 'D' | 'E' | 'F';
+lower hex digit = decimal digit | 'a' | 'b' | 'c' | 'd' | 'e' | 'f';
+
+space = ' ';
+tab = ? horizontal tab character ?;
+carriage return = ? carriage return character ?;
+line feed = ? line feed character ?;
+newline = [ carriage return ], line feed;
+whitespace character = space | tab | carriage return | line feed;
+
+(* one or more spaces / tabs / newlines *)
+whitespace = ( space | tab | newline ), { space | tab | newline };
+
+printable character = ? any printable character except space ?;
+control character = ? any unprintable character that is not whitespace ?;
+character = printable character | whitespace character | control character;
+
+
+(* ----------------------------- 2. Literals ----------------------------- *)
+
+(* --- numbers --- *)
+
+binary number = binary digit, { binary digit };
+decimal number = decimal digit, { decimal digit };
+upper hex number = upper hex digit, { upper hex digit };
+lower hex number = lower hex digit, { lower hex digit };
+hex number = upper hex number | lower hex number;    (* mixed case such as 0xAbC is not allowed *)
+
+binary prefix = '0b' | '0B';
+decimal prefix = '0d' | '0D';
+hex prefix = '0x' | '0X';
+
+binary literal = binary prefix, binary number;
+decimal literal = [ decimal prefix ], decimal number;
+hex literal = hex prefix, hex number;
+number literal = binary literal | decimal literal | hex literal;
+
+(* --- escaped strings: "..." or '...' --- *)
+
+escape sequence = '`', ( 'n' | 'r' | 't' | '"' | "'" | '`' );
+plain string character = ( printable character | space ) - ( '"' | "'" | '`' );
+string character = plain string character | escape sequence;
+double quoted string = '"', { string character }, '"';
+single quoted string = "'", { string character }, "'";
+escaped string literal = double quoted string | single quoted string;
+
+(* --- raw strings: R"delim( ... )delim" --- *)
+
+raw delimiter character = printable character - ( '(' | ')' );
+(* 0 to 16 delimiter characters *)
+raw delimiter =
+    [ raw delimiter character ], [ raw delimiter character ],
+    [ raw delimiter character ], [ raw delimiter character ],
+    [ raw delimiter character ], [ raw delimiter character ],
+    [ raw delimiter character ], [ raw delimiter character ],
+    [ raw delimiter character ], [ raw delimiter character ],
+    [ raw delimiter character ], [ raw delimiter character ],
+    [ raw delimiter character ], [ raw delimiter character ],
+    [ raw delimiter character ], [ raw delimiter character ];
+
+raw string literal =
+    'R"', raw delimiter, '(',
+    { character },
+    ')', raw delimiter, '"',
+    ? the two raw delimiters must be the same, and the closing sequence ')', raw delimiter, '"' must not occur inside the body ?;
+
+string literal = escaped string literal | raw string literal;
+
+
+(* ------------------------------ 3. Tokens ------------------------------ *)
+
+semicolon = ';';
+statement end = [ whitespace ], semicolon;
+
+(* --- keywords --- *)
+
+let keyword = 'let';          (* immutable variable *)
+mut keyword = 'mut';          (* used as: let mut *)
+const keyword = 'const';      (* compile-time constant *)
+import keyword = 'import';
+from keyword = 'from';
+if keyword = 'if';
+
+(* --- types --- *)
+
+builtin type = 'i8' | 'i16' | 'i32' | 'double' | 'float' | 'bool' | 'string' | 'char' | 'char8' | 'char16' | 'char32';
+user defined type = ? any type defined by the user, such as a class ?;
+builtin return type = builtin type | 'void';
+
+keyword =
+    builtin return type |
+    let keyword |
+    mut keyword |
+    const keyword |
+    import keyword |
+    from keyword |
+    if keyword;
+
+(* --- names --- *)
+
+variable name = ( letter, { letter | decimal digit | '_' } ) - keyword;
+module name = letter, { letter | decimal digit | '.' | '_' };
+
+
+(* ------------------------------ 4. Syntax ------------------------------ *)
+
+(* --- expressions (TODO) --- *)
+
+expression = if expression | ? TODO: other expressions ?;
+if expression = [ whitespace ], if keyword;    (* TODO: condition and branches *)
+
+(* --- declarations --- *)
+
+(* shared tail of let / let mut / const:  name : type [ = expression ] ; *)
+declaration body =
+    whitespace,
+    variable name,
+    [ whitespace ],
+    ':',
+    [ whitespace ],
+    ( builtin type | user defined type ),
+    [
+        [ whitespace ],
+        '=',
+        [ whitespace ],
+        expression
+    ],
+    statement end;
+
+immutable declaration =
+    [ whitespace ],
+    let keyword,
+    declaration body;
+
+mutable declaration =
+    [ whitespace ],
+    let keyword,
+    whitespace,
+    mut keyword,
+    declaration body;
+
+compile time declaration =
+    [ whitespace ],
+    const keyword,
+    declaration body;
+
+declaration =
+    immutable declaration |
+    mutable declaration |
+    compile time declaration;
+
+(* --- import --- *)
+
+import statement =
+    [ whitespace ],
+    import keyword,
+    whitespace,
+    module name,
+    [
+        whitespace,
+        from keyword,
+        whitespace,
+        escaped string literal
+    ],
+    statement end;
+
+(* ----------------------------- 5. Comment ----------------------------- *)
+line comment = '//', { character - line feed };
+
+block comment =
+    '/*',
+    {
+        ( character - '*' )
+        | ( '*', { '*' }, character - ( '*' | '/' ) )
+    },
+    { '*' },
+    '*/';
+
+comment = line comment | block comment;
