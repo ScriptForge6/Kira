@@ -132,7 +132,6 @@ statement = ? TODO: statements ?;
 expression = if expression | ? TODO: other expressions ?;
 block expression = if expression | ? TODO: other block expressions ?;
 if expression = 
-    [ whitespace ],
     if keyword,
     whitespace,
     [ declaration ],
@@ -164,7 +163,6 @@ declaration body =
     statement end;
 
 immutable declaration =
-    [ whitespace ],
     let keyword,
     declaration body,
     [ whitespace ],
@@ -172,7 +170,6 @@ immutable declaration =
     { declaration body };
 
 mutable declaration =
-    [ whitespace ],
     let keyword,
     whitespace,
     mut keyword,
@@ -182,7 +179,6 @@ mutable declaration =
     { declaration body };
 
 compile time declaration =
-    [ whitespace ],
     const keyword,
     declaration body,
     [ whitespace ],
@@ -197,7 +193,6 @@ declaration =
 (* --- import --- *)
 
 import statement =
-    [ whitespace ],
     import keyword,
     whitespace,
     module name,
