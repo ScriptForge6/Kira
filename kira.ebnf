@@ -125,10 +125,24 @@ module name = letter, { letter | decimal digit | '.' | '_' };
 
 (* ------------------------------ 4. Syntax ------------------------------ *)
 
+statement = ? TODO: statements ?;
+
 (* --- expressions (TODO) --- *)
 
 expression = if expression | ? TODO: other expressions ?;
-if expression = [ whitespace ], if keyword, whitespace;    (* TODO: condition and branches *)
+block expression = if expression | ? TODO: other block expressions ?;
+if expression = 
+    [ whitespace ],
+    if keyword,
+    whitespace,
+    [ declaration ],
+    [ whitespace ],
+    ( expression | block expression ), ? bool expression ?,
+    '->',
+    ( builtin type | user defined type ), 
+    [ whitespace ],
+    '{',
+    { statement };    (* TODO: condition and branches *)
 
 (* --- declarations --- *)
 
@@ -138,7 +152,7 @@ declaration body =
     variable name,
     [ whitespace ],
     ':',
-    [ whitespace ],
+    
     ( builtin type | user defined type ),
     [
         [ whitespace ],
@@ -146,24 +160,34 @@ declaration body =
         [ whitespace ],
         expression
     ],
+    [ whitespace ],
     statement end;
 
 immutable declaration =
     [ whitespace ],
     let keyword,
-    declaration body;
+    declaration body,
+    [ whitespace ],
+    ',',
+    { declaration body };
 
 mutable declaration =
     [ whitespace ],
     let keyword,
     whitespace,
     mut keyword,
-    declaration body;
+    declaration body,
+    [ whitespace ],
+    ',',
+    { declaration body };
 
 compile time declaration =
     [ whitespace ],
     const keyword,
-    declaration body;
+    declaration body,
+    [ whitespace ],
+    ',',
+    { declaration body };
 
 declaration =
     immutable declaration |

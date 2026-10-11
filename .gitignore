@@ -367,3 +367,12 @@ FodyWeavers.xsd
 
 # local
 local/
+
+# .xmake
+.xmake/
+
+# build
+build/
+
+# vsmake
+vsxmake2026/
