@@ -19,6 +19,6 @@
 #pragma once
 #ifndef CLI_HPP
 #define CLI_HPP
-#include "Lang.h"
-#include "Version.h"
+#include "Lang.hpp"
+#include "Version.hpp"
 #endif
