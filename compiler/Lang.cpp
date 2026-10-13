@@ -20,8 +20,29 @@
 
 #include "ExePath.hpp"
 
-Lang::Lang(std::string_view langCode, const std::optional<path_t>& dir = std::nullopt) {
-    lazyInitTempObj = std::make_unique<LazyInitTempObj>();
-    lazyInitTempObj->langCode = langCode;
-    lazyInitTempObj->dir = dir;
+Lang::Lang(std::string_view langCode, const std::optional<path_t>& dir/*= std::nullopt*/) {
+    m_lazyInitTempObj = std::make_unique<LazyInitTempObj>();
+    m_lazyInitTempObj->langCode = langCode;
+    m_lazyInitTempObj->dir = dir;
+}
+
+void Lang::lazyLoad() {
+    if (!m_lazyInitTempObj) return;
+
+    m_langCode = std::move(m_lazyInitTempObj->langCode);
+    if (m_lazyInitTempObj->dir) {
+        m_dir = std::move(*m_lazyInitTempObj->dir);
+    }
+    else if (auto exeDir = getExeDir()) {
+        m_dir = *exeDir / LANG;
+    } else {
+        //throw
+    }
+
+    m_lazyInitTempObj.reset();
+    reload();
+}
+
+void Lang::reload() {
+
 }
