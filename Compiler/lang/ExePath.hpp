@@ -10,18 +10,32 @@
 // limitations under the License.
 
 /**
- * @file Lang.cpp
- * @brief i18n 类的实现
+ * @file ExePath.hpp
+ * @brief 获取可执行文件位置或地址
+ * @brief 获取可执行文件位置或地址
  * @author Scriptforge
  * @date 2026/10/11
  */
 
-#include "Lang.hpp"
+#pragma once
+#ifndef EXEPATH_HPP
+#define EXEPATH_HPP
 
-#include "ExePath.hpp"
+#include <filesystem>
+#include <optional>
 
-Lang::Lang(std::string_view langCode, const std::optional<path_t>& dir = std::nullopt) {
-    lazyInitTempObj = std::make_unique<LazyInitTempObj>();
-    lazyInitTempObj->langCode = langCode;
-    lazyInitTempObj->dir = dir;
-}
+/**
+ * @brief 获取可执行文件地址
+ * @return 返回可执行文件地址
+ * @retval std::nullopt 出现错误
+*/
+std::optional<std::filesystem::path> getExePath();
+
+/**
+ * @brief 获取可执行文件位置
+ * @return 返回可执行文件位置
+ * @retval std::nullopt 出现错误
+*/
+std::optional<std::filesystem::path> getExeDir();
+
+#endif

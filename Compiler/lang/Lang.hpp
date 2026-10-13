@@ -19,16 +19,18 @@
 #pragma once
 #ifndef LANG_HPP
 #define LANG_HPP
+
 #include <filesystem>
+#include <memory>
+#include <optional>
 #include <string>
 #include <string_view>
-#include <memory>
 
 #include <nlohmann/json.hpp>
 
 /**
  * @brief i18n 类
- * @warning 非线程安全
+ * @note 非线程安全
  */
 class Lang{
 private:
@@ -48,16 +50,21 @@ public:
         const std::optional<path_t>& dir
             = std::nullopt/*=getExeDir() / LANG*/
     );
+
     /**
      * @brief Lang 的懒加载函数
      */
-    void lazyLoad() {
+    void lazyLoad();
 
-    }
+    /**
+     * @brief 重加载
+     */
+    void reload();
 private:
-    std::unique_ptr<LazyInitTempObj> lazyInitTempObj = nullptr;
+    std::unique_ptr<LazyInitTempObj> m_lazyInitTempObj = nullptr;
     std::string m_langCode;
     path_t m_dir;
     nlohmann::json m_json;
 };
+
 #endif

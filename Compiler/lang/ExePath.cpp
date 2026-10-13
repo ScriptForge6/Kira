@@ -10,15 +10,15 @@
 // limitations under the License.
 
 /**
- * @file ExePath.hpp
- * @brief 获取可执行文件位置或地址
- * @brief 获取可执行文件位置或地址
+ * @file ExePath.cpp
+ * @brief 可执行文件位置或地址的实现
+ * @brief 可执行文件位置或地址的实现
  * @author Scriptforge
- * @date 2026/10/11
+ * @date 2026/10/13
  */
 
-#pragma once
-#include <filesystem>
+#include "ExePath.hpp"
+
 #include <string>
 #include <system_error>
 
@@ -39,12 +39,8 @@
 #error "Unsupported platform"
 #endif
 
-/**
- * @brief 获取可执行文件地址
- * @return 返回可执行文件地址
- * @retval std::nullopt 出现错误
-*/
-inline std::optional<std::filesystem::path> getExePath() {
+
+std::optional<std::filesystem::path> getExePath() {
     namespace fs = std::filesystem;
     fs::path result;
 
@@ -92,12 +88,7 @@ inline std::optional<std::filesystem::path> getExePath() {
     return ec ? result : canon;
 }
 
-/**
- * @brief 获取可执行文件位置
- * @return 返回可执行文件位置
- * @retval std::nullopt 出现错误
-*/
-inline std::optional<std::filesystem::path> getExeDir() {
+std::optional<std::filesystem::path> getExeDir() {
     auto p = getExePath();
     if (!p) return std::nullopt;
     return p->parent_path();

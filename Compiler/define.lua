@@ -10,16 +10,23 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ]]--
-SCRIPT_NAME = "Kira"
+
+SCRIPT_NAME = "Kirac"
 VERSION = "0.0.0"
 LICENSE = "Apache License 2.0"
 START_YEAR = 2026
 AUTHOR = "Scriptforge"
-COM_NAME = "compiler"
-LANG = "lang"
-DETAIL = "detail"
 PROJECTDIR = os.projectdir()
-COM_DIR = path.join(PROJECTDIR, COM_NAME)
-COM_LUA = path.join(COM_DIR, "xmake.lua")
-LANG_DIR = path.join(LIB_DIR, LANG)
-DETAIL_DIR = path.join(COM_DIR, DETAIL)
+LANG = "lang"
+local TARGET_MAIN_FILE = "xmake.lua"
+
+API_FILE = "KiracApi.hpp"
+API_FILE_DIR = path.join(PROJECTDIR, API_FILE)
+
+MAIN_NAME = "kirac"
+MAIN_DIR = path.join(PROJECTDIR, "main")
+MAIN_LUA = path.join(MAIN_DIR, TARGET_MAIN_FILE)
+
+LANG_NAME = "lang"
+LANG_DIR = path.join(PROJECTDIR, LANG_NAME)
+LANG_LUA = path.join(LANG_DIR, TARGET_MAIN_FILE)

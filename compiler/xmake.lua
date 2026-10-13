@@ -10,26 +10,34 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ]]--
-target(COM_NAME)
-	set_kind("binary")
-	add_cxxflags({
-        "/permissive-",
-        "/Zc:preprocessor",
-        "/Zc:templateScope"
-    }, {tools = {"cl"}})
-    
-    add_extrafiles(LANG_DIR)
-    
-    add_packages("nlohmann_json")
 
-    add_defines("LANG=" .. "\"" .. LANG .. "\"")
+includes("define.lua")
 
-    add_includedirs(COM_DIR)
-    add_includedirs(DETAIL_DIR)
-    
-    add_files(path.join(COM_DIR, "*.cpp"))
-    add_files(path.join(DETAIL_DIR, "*.cpp"))
-    add_headerfiles(path.join(COM_DIR, "*.hpp"))
+set_project(SCRIPT_NAME)
+set_version(VERSION)
 
-    add_extrafiles(path.join(LANG_DIR, "*.json"))
-target_end()
+add_defines(string.format("SCRIPT_NAME=\"%s\"", SCRIPT_NAME))
+add_defines(string.format("VERSION=\"%s\"", VERSION))
+add_defines(string.format("LICENSE=\"%s\"", LICENSE))
+add_defines(string.format("START_YEAR=%d", START_YEAR))
+add_defines(string.format("AUTHOR=\"%s\"", AUTHOR))
+
+add_rules("mode.debug", "mode.release")
+
+set_policy("package.install_locally", true)
+add_requires("nlohmann_json >=3.11.0")
+
+set_defaultmode("mode.debug")
+
+set_languages("c++20")
+set_warnings("allextra")
+set_symbols("debug", "hidden")
+
+add_cxxflags({
+    "/permissive-",
+    "/Zc:preprocessor",
+    "/Zc:templateScope"
+}, {tools = {"cl"}})
+
+includes(LANG_LUA)
+includes(MAIN_LUA)
