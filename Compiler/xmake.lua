@@ -42,5 +42,7 @@ add_cxxflags({
 add_includedirs(PROJECTDIR)
 add_headerfiles(API_FILE)
 
+includes(MSG_LUA)
 includes(LANG_LUA)
+includes(CLI_LUA)
 includes(MAIN_LUA)

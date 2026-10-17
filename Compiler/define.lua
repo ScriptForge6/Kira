@@ -27,6 +27,14 @@ MAIN_NAME = "kirac"
 MAIN_DIR = path.join(PROJECTDIR, "main")
 MAIN_LUA = path.join(MAIN_DIR, TARGET_MAIN_FILE)
 
+MSG_NAME = "msg"
+MSG_DIR = path.join(PROJECTDIR, MSG_NAME)
+MSG_LUA = path.join(MSG_DIR, TARGET_MAIN_FILE)
+
 LANG_NAME = "lang"
 LANG_DIR = path.join(PROJECTDIR, LANG_NAME)
 LANG_LUA = path.join(LANG_DIR, TARGET_MAIN_FILE)
+
+CLI_NAME = "cli"
+CLI_DIR = path.join(PROJECTDIR, CLI_NAME)
+CLI_LUA = path.join(CLI_DIR, TARGET_MAIN_FILE)

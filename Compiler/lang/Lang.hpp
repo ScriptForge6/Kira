@@ -21,6 +21,7 @@
 #define KIRA_COMPILER_LANG_HPP
 #include "LangApi.hpp"
 
+#include <exception>
 #include <filesystem>
 #include <memory>
 #include <optional>
@@ -36,33 +37,25 @@
 class KIRA_API_LANG Lang {
 private:
     using path_t = std::filesystem::path;
-    struct LazyInitTempObj {
-        std::optional<path_t> dir;
-        std::string langCode;
-    };
 public:
+    Lang() = delete;
     /**
-     * @brief Lang 的构造函数（懒加载）
+     * @brief Lang 的构造函数
      * @param[in] langCode 文件名称（使用 ISO-639-1 ）
      * @param[in] path     文件夹位置
      */
     Lang(
         std::string_view langCode,
         const std::optional<path_t>& dir
-            = std::nullopt/*=getExeDir() / LANG*/
-    );
-
-    /**
-     * @brief Lang 的懒加载函数
-     */
-    void lazyLoad();
+            = std::nullopt/* = getExeDir() / LANG*/
+    ) noexcept;
 
     /**
      * @brief 重加载
      */
     void reload();
 private:
-    std::unique_ptr<LazyInitTempObj> m_lazyInitTempObj = nullptr;
+    std::exception_ptr m_lazyLoadExceptPtr = nullptr;
     std::string m_langCode;
     path_t m_dir;
     nlohmann::json m_json;
