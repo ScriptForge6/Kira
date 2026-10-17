@@ -1,6 +1,6 @@
 #include <iostream>
 #include <Lang.hpp>
-Lang lang{ "test" };
+#include <Msg.hpp>
 int main() {
 	std::cout << "Hello, World!" << std::endl;
 	std::cout << "the Compiler CAN NOT use nnnnow!" << std::endl;

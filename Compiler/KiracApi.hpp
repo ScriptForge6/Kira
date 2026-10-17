@@ -38,6 +38,29 @@
 	#error "Unsupported platform"
 #endif
 
+#if defined(_MSVC_LANG)
+	#define KIRA_CPLUSPLUS _MSVC_LANG
+#elif defined(__cplusplus)
+	#define KIRA_CPLUSPLUS __cplusplus
+#else
+	#define KIRA_CPLUSPLUS 0L
+#endif
+
+#if defined(_MSC_VER)
+	#define KIRA_MSVC 1
+	#define KIRA_MSVC_VER _MSC_VER
+#elif defined(__GNUC__)
+	#define KIRA_GNU 1
+	#define KIRA_GNU_MAJOR __GNUC__
+	#define KIRA_GNU_MINOR __GNUC_MINOR__
+	#define KIRA_GNU_PATCH __GNUC_PATCHLEVEL__
+#elif defined(__clang__)
+#define KIRA_CLANG 1
+#define KIRA_CLANG_MAJOR __clang_major__
+#define KIRA_CLANG_MINOR __clang_minor__
+#define KIRA_CLANG_PATCH __clang_patchlevel__
+#endif
+
 
 #ifndef KIRA_IMPORT_API
 	#if defined(KIRA_WIN)
@@ -55,20 +78,12 @@
 	#endif
 #endif
 
-#if defined(_MSVC_LANG)
-	#define KIRA_CPLUSPLUS _MSVC_LANG
-#elif defined(__cplusplus)
-	#define KIRA_CPLUSPLUS __cplusplus
-#else
-	#define KIRA_CPLUSPLUS 0L
-#endif
-
 // ---- KIRA_DEPRECATED(msg):标记废弃 ----
 #if KIRA_CPLUSPLUS >= 201402L
 	#define KIRA_DEPRECATED(msg) [[deprecated(msg)]]
-#elif defined(_MSC_VER)
+#elif defined(KIRA_MSVC)
 	#define KIRA_DEPRECATED(msg) __declspec(deprecated(msg))
-#elif defined(__GNUC__) || defined(__clang__)
+#elif defined(KIRA_GNU) || defined(KIRA_CLANG)
 	#define KIRA_DEPRECATED(msg) __attribute__((deprecated(msg)))
 #else
 	#define KIRA_DEPRECATED(msg)
@@ -77,13 +92,15 @@
 // ---- KIRA_NODISCARD:忽略返回值时警告 ----
 #if KIRA_CPLUSPLUS >= 201703L
 	#define KIRA_NODISCARD [[nodiscard]]
-#elif defined(__GNUC__) || defined(__clang__)
+#elif defined(KIRA_GNU) || defined(KIRA_CLANG)
 	#define KIRA_NODISCARD __attribute__((warn_unused_result))
-#elif defined(_MSC_VER) && _MSC_VER >= 1700
+#elif defined(KIRA_MSVC) && KIRA_MSVC_VER >= 1700
 	#include <sal.h>
 	#define KIRA_NODISCARD _Check_return_
 #else
 	#define KIRA_NODISCARD
 #endif
+
+
 
 #endif

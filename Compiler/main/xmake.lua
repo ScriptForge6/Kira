@@ -16,9 +16,11 @@ includes("../define.lua")
 target(MAIN_NAME)
 	set_kind("binary")
 
+    add_deps(MSG_NAME)
     add_deps(LANG_NAME)
 
     add_defines("LANG=" .. "\"" .. LANG .. "\"")
+    add_defines("KIRA_MSG_IMPORT", {public = true})
     add_defines("KIRA_LANG_IMPORT", {public = true})
 
     add_packages("nlohmann_json")
