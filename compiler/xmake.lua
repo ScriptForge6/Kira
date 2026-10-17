@@ -39,5 +39,8 @@ add_cxxflags({
     "/Zc:templateScope"
 }, {tools = {"cl"}})
 
+add_includedirs(PROJECTDIR)
+add_headerfiles(API_FILE)
+
 includes(LANG_LUA)
 includes(MAIN_LUA)

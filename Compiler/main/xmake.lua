@@ -19,6 +19,7 @@ target(MAIN_NAME)
     add_deps(LANG_NAME)
 
     add_defines("LANG=" .. "\"" .. LANG .. "\"")
+    add_defines("KIRA_LANG_IMPORT")
 
     add_packages("nlohmann_json")
 

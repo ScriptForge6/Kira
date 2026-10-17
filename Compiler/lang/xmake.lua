@@ -17,6 +17,7 @@ target(LANG_NAME)
 	set_kind("shared")
 
     add_defines("LANG=" .. "\"" .. LANG .. "\"")
+    add_defines("KIRA_LANG_EXPORT")
 
     add_includedirs(LANG_DIR, {public = true})
 

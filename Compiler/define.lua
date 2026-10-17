@@ -20,8 +20,8 @@ PROJECTDIR = os.projectdir()
 LANG = "lang"
 local TARGET_MAIN_FILE = "xmake.lua"
 
-API_FILE = "KiracApi.hpp"
-API_FILE_DIR = path.join(PROJECTDIR, API_FILE)
+API_FILENAME = "KiracApi.hpp"
+API_FILE = path.join(PROJECTDIR, API_FILENAME)
 
 MAIN_NAME = "kirac"
 MAIN_DIR = path.join(PROJECTDIR, "main")

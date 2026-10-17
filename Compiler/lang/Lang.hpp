@@ -19,6 +19,7 @@
 #pragma once
 #ifndef LANG_HPP
 #define LANG_HPP
+#include "LangApi.hpp"
 
 #include <filesystem>
 #include <memory>
@@ -32,7 +33,7 @@
  * @brief i18n 类
  * @note 非线程安全
  */
-class Lang{
+class KIRA_API_LANG Lang {
 private:
     using path_t = std::filesystem::path;
     struct LazyInitTempObj {
