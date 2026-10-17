@@ -50,7 +50,7 @@ std::filesystem::path getExePath() {
     std::wstring buf(MAX_PATH, L'\0');
     for (;;) {
         DWORD n = GetModuleFileNameW(nullptr, buf.data(), static_cast<DWORD>(buf.size()));
-        if (n == 0) return std::nullopt;
+        if (n == 0) //throw
         if (n < buf.size()) { buf.resize(n); break; }   // 成功
         if (buf.size() > 32768) //throw    // 防止无限扩容
         buf.resize(buf.size() * 2);                     // 被截断，重试
