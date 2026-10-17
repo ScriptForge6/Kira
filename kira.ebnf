@@ -147,43 +147,28 @@ if expression =
 
 (* shared tail of let / let mut / const:  name : type [ = expression ] ; *)
 declaration body =
-    whitespace,
     variable name,
-    [ whitespace ],
-    ':',
-    
+    [ whitespace ], ':', [ whitespace ],
     ( builtin type | user defined type ),
-    [
-        [ whitespace ],
-        '=',
-        [ whitespace ],
-        expression
-    ],
-    [ whitespace ],
-    statement end;
+    [ [ whitespace ], '=', [ whitespace ], expression ];
 
 immutable declaration =
-    let keyword,
+    let keyword, whitespace,
     declaration body,
-    [ whitespace ],
-    ',',
-    { declaration body };
+    { [ whitespace ], ',', [ whitespace ], declaration body },
+    statement end;
 
 mutable declaration =
-    let keyword,
-    whitespace,
-    mut keyword,
+    let keyword, whitespace, mut keyword, whitespace,
     declaration body,
-    [ whitespace ],
-    ',',
-    { declaration body };
+    { [ whitespace ], ',', [ whitespace ], declaration body },
+    statement end;
 
 compile time declaration =
-    const keyword,
+    const keyword, whitespace,
     declaration body,
-    [ whitespace ],
-    ',',
-    { declaration body };
+    { [ whitespace ], ',', [ whitespace ], declaration body },
+    statement end;
 
 declaration =
     immutable declaration |
