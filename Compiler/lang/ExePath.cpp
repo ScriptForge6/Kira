@@ -22,17 +22,19 @@
 #include <string>
 #include <system_error>
 
-#if defined(_WIN32)
+#include <KiracApi.hpp>
+
+#if defined(KIRA_WIN)
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
 #include <windows.h>
-#elif defined(__APPLE__)
+#elif defined(KIRA_APPLE)
 #include <mach-o/dyld.h>
 #include <vector>
-#elif defined(__linux__)
+#elif defined(KIRA_LINUX)
 #include <unistd.h>
-#elif defined(__FreeBSD__)
+#elif defined(KIRA_FREEBSD)
 #include <sys/types.h>
 #include <sys/sysctl.h>
 #else
@@ -40,7 +42,7 @@
 #endif
 
 
-std::optional<std::filesystem::path> getExePath() {
+std::filesystem::path getExePath() {
     namespace fs = std::filesystem;
     fs::path result;
 
@@ -50,7 +52,7 @@ std::optional<std::filesystem::path> getExePath() {
         DWORD n = GetModuleFileNameW(nullptr, buf.data(), static_cast<DWORD>(buf.size()));
         if (n == 0) return std::nullopt;
         if (n < buf.size()) { buf.resize(n); break; }   // 成功
-        if (buf.size() > 32768) return std::nullopt;    // 防止无限扩容
+        if (buf.size() > 32768) //throw    // 防止无限扩容
         buf.resize(buf.size() * 2);                     // 被截断，重试
     }
     result = buf;
@@ -59,16 +61,16 @@ std::optional<std::filesystem::path> getExePath() {
     uint32_t size = 0;
     _NSGetExecutablePath(nullptr, &size);               // 先问需要多大
     std::vector<char> buf(size);
-    if (_NSGetExecutablePath(buf.data(), &size) != 0) return std::nullopt;
+    if (_NSGetExecutablePath(buf.data(), &size) != 0) //throw
     result = buf.data();
 
 #elif defined(__linux__)
     std::string buf(256, '\0');
     for (;;) {
         ssize_t n = readlink("/proc/self/exe", buf.data(), buf.size());
-        if (n < 0) return std::nullopt;
+        if (n < 0) //throw
         if (static_cast<size_t>(n) < buf.size()) { buf.resize(n); break; }
-        if (buf.size() > 65536) return std::nullopt;
+        if (buf.size() > 65536) //throw
         buf.resize(buf.size() * 2);                     // readlink 截断时不报错，要自己判断
     }
     result = buf;
@@ -76,9 +78,9 @@ std::optional<std::filesystem::path> getExePath() {
 #elif defined(__FreeBSD__)
     int mib[4] = { CTL_KERN, KERN_PROC, KERN_PROC_PATHNAME, -1 };
     size_t len = 0;
-    if (sysctl(mib, 4, nullptr, &len, nullptr, 0) != 0 || len == 0) return std::nullopt;
+    if (sysctl(mib, 4, nullptr, &len, nullptr, 0) != 0 || len == 0) //throw
     std::string buf(len, '\0');
-    if (sysctl(mib, 4, buf.data(), &len, nullptr, 0) != 0) return std::nullopt;
+    if (sysctl(mib, 4, buf.data(), &len, nullptr, 0) != 0) //throw
     result = buf.c_str();
 #endif
 
@@ -88,8 +90,6 @@ std::optional<std::filesystem::path> getExePath() {
     return ec ? result : canon;
 }
 
-std::optional<std::filesystem::path> getExeDir() {
-    auto p = getExePath();
-    if (!p) return std::nullopt;
-    return p->parent_path();
+std::filesystem::path getExeDir() {
+    return getExePath().parent_path();
 }

@@ -16,8 +16,11 @@ includes("../define.lua")
 target(LANG_NAME)
 	set_kind("shared")
 
+    add_deps(MSG_NAME)
+
     add_defines("LANG=" .. "\"" .. LANG .. "\"")
     add_defines("KIRA_LANG_EXPORT")
+    add_defines("KIRA_MSG_IMPORT", {public = true})
 
     add_includedirs(LANG_DIR, {public = true})
 

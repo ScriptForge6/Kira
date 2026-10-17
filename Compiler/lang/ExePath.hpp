@@ -29,13 +29,13 @@
  * @return 返回可执行文件地址
  * @retval std::nullopt 出现错误
 */
-std::optional<std::filesystem::path> getExePath();
+std::filesystem::path getExePath();
 
 /**
  * @brief 获取可执行文件位置
  * @return 返回可执行文件位置
  * @retval std::nullopt 出现错误
 */
-std::optional<std::filesystem::path> getExeDir();
+std::filesystem::path getExeDir();
 
 #endif

@@ -14,8 +14,7 @@ limitations under the License.
 includes("../define.lua")
 
 target(MSG_NAME)
-	-- set_kind("shared")
-    set_kind("static")
+	set_kind("shared")
 
     add_defines("KIRA_MSG_EXPORT")
 
