@@ -18,8 +18,8 @@
  */
 
 #pragma once
-#ifndef EXEPATH_HPP
-#define EXEPATH_HPP
+#ifndef KIRA_COMPILER_EXEPATH_HPP
+#define KIRA_COMPILER_EXEPATH_HPP
 
 #include <filesystem>
 #include <optional>

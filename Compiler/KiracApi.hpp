@@ -17,8 +17,8 @@
  */
 
 #pragma once
-#ifndef KIRACAPI_HPP
-#define KIRACAPI_HPP
+#ifndef KIRA_COMPILER_KIRACAPI_HPP
+#define KIRA_COMPILER_KIRACAPI_HPP
 
 #if defined(_WIN32) || defined(_WIN64)
 	#define KIRA_WIN 1

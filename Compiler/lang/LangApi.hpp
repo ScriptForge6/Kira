@@ -19,8 +19,8 @@
 #pragma once
 #include <KiracApi.hpp>
 
-#ifndef LANGAPI_HPP
-#define LANGAPI_HPP
+#ifndef KIRA_COMPILER_LANGAPI_HPP
+#define KIRA_COMPILER_LANGAPI_HPP
 
 #ifndef KIRA_API_LANG
 #if defined(KIRA_LANG_IMPORT) && defined(KIRA_LANG_EXPORT)
