@@ -32,13 +32,11 @@
 #elif defined(KIRA_APPLE)
 #include <mach-o/dyld.h>
 #include <vector>
-#elif defined(KIRA_LINUX)
+#elif defined(KIRA_LINUX) || defined(KIRA_WASM)
 #include <unistd.h>
 #elif defined(KIRA_FREEBSD)
 #include <sys/types.h>
 #include <sys/sysctl.h>
-#else
-#error "Unsupported platform"
 #endif
 
 

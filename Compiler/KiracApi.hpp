@@ -34,6 +34,8 @@
 	#define KIRA_LINUX 1
 #elif defined(__FreeBSD__)
 	#define KIRA_FREEBSD 1
+#elif defined(__EMSCRIPTEN__)
+	#define KIRA_WASM 1
 #else
 	#error "Unsupported platform"
 #endif
